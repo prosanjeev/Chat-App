@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { Navigate, Outlet } from "react-router-dom"
+import { Navigate, Route } from 'react-router-dom';
+import { useProfile } from '../context/profile.context';
 
-const PrivateRoute = () => {
+const PrivateRoute = ({ children, ...rest }) => {
 
-    const [loggedIn] = useState(true);
+    let profile = true;
 
-    if (loggedIn) {
-        return <Outlet />
-    } else {
-        return <Navigate to={'/signin'} />;
-    }
+  if (profile) {
+    // User is authenticated, allow access to the route
+    return <Route {...rest}>{children}</Route>;
+  } else {
+    // User is not authenticated, redirect to the sign-in page
+    return <Navigate to="/signin" />;
+  }
+};
 
-}
-
-export default PrivateRoute
+export default PrivateRoute;

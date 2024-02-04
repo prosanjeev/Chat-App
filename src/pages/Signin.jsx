@@ -3,7 +3,10 @@ import { Button, Col, Container, Grid, Panel, Row } from "rsuite"
 import {auth, database} from '../misc/firebase'
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ref, child, get, set } from "firebase/database";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import FacebookOfficialIcon from '@rsuite/icons/legacy/FacebookOfficial';
+
+
 
 const Signin = () => {
 const googleProvider = new GoogleAuthProvider();
@@ -28,19 +31,18 @@ async function onGoogleSignIn() {
       };
 
       await set(userRef, userData);
-      console.log("User data added for new user:", userId);
+      toast("User data added for new user:", userId);
     } else {
-      alert("User already exists: " + userId);
+      toast("User already exists: " + userId);
     }
   } catch (error) {
-    console.error("Error: ", error);
+    toast("Error: ", error);
   }
 }
    
 
   return (
     <Container>
-      <ToastContainer/>
     <Grid className="mt-page">
       <Row>
         <Col xs={24} md={12} mdOffset={6}>
@@ -52,7 +54,7 @@ async function onGoogleSignIn() {
 
             <div className="mt-3">
               <Button block color="blue" >
-                <Icon icon="facebook" /> Continue with Facebook
+              {<FacebookOfficialIcon />} Continue with Facebook
               </Button>
 
               <Button block color="green" onClick={onGoogleSignIn} >
