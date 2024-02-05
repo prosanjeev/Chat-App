@@ -10,7 +10,7 @@ const Chat = () => {
 
     const { chatId } = useParams();
 
-    const rooms = useRooms();
+    const rooms = useRooms();   
   
     useEffect(() => {
       window.chatId = chatId;
