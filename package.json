@@ -16,7 +16,9 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.4",
     "rsuite": "^5.52.0",
+    "sass": "^1.70.0",
     "timeago-react": "^3.0.6",
+    "use-context-selector": "^1.4.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5"
   }
 }

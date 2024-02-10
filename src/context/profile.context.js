@@ -1,19 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, database, dbRef } from "../misc/firebase";
-import { child, get, getDatabase, onValue, ref } from 'firebase/database';
+import { auth, database } from "../misc/firebase";
+import { onValue, ref } from 'firebase/database';
 
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-    const [profile, setProfile] = useState(null)
+    const [profile, setProfile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        auth.onAuthStateChanged(authObj => {
+        let userRef;
+        const authUnsub = auth.onAuthStateChanged(authObj => {
 
             if (authObj) {
-
                 // //TODO(AA) : Method 1
-                // let userRef = dbRef(database, "users",authObj)
+                //  let userRef = dbRef(database, "users",authObj)
 
                 // onValue(userRef,(snapshot) => {
                 //     const {displayName,email,uid} = snapshot.val();
@@ -38,35 +39,40 @@ export const ProfileProvider = ({ children }) => {
                 // FIXME(SK) : message.....
                 // const databaseRef = ref(database);
 
-                const databaseRef = ref(getDatabase());
-                get(child(databaseRef, `/users/${authObj.uid}`)).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        //console.log(snapshot.val());
-                        const { displayName, email, uid, avatar } = snapshot.val();
-                        const data = {
-                            uid: uid,
-                            avatar:avatar,
-                            email: email,
-                            name: displayName
-                        }
-                        console.log('profielData', data)
-                        setProfile(data);
-                    } else {
-                        console.log("No data available");
+                userRef = ref(database, `/users/${authObj.uid}`)
+                onValue(userRef, (snapshot) => {
+                    const { displayName, email, uid, avatar } = snapshot.val();
+                    const data = {
+                        uid: uid,
+                        email: email,
+                        name: displayName,
+                        avatar: avatar
                     }
-                }).catch((error) => {
-                    console.error(error);
+                    console.log('profielData', data)
+                    setProfile(data);
+                    setIsLoading(false);
                 });
             } else {
+                if (userRef) {
+                    userRef.off();
+                }
+                console.log("No data available");
                 setProfile(null);
+                setIsLoading(false)
             }
-        })
-    }, [])
+        });
+        return () => {
+            authUnsub();
+            if (userRef) {
+                userRef.off();
+            }
+        }
+    }, []);
 
-    return <ProfileContext.Provider value={profile}>
-        {children} 
-    </ProfileContext.Provider>
+    return (<ProfileContext.Provider value={{ isLoading, profile }}>
+        {children}
+    </ProfileContext.Provider>)
 
-}
+};
 
-export const useProfile = () => useContext(ProfileContext)
+export const useProfile = () => { return useContext(ProfileContext) }

@@ -13,7 +13,7 @@ export function getNameInitials(name) {
 export function transformToArr(snapVal) {
   return snapVal ? Object.keys(snapVal) : [];
 }
-
+ 
 export function transformToArrWithId(snapVal) {
   return snapVal
     ? Object.keys(snapVal).map(roomId => {

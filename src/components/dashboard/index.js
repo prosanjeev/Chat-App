@@ -7,12 +7,11 @@ import { child, get, getDatabase, ref, update } from "firebase/database";
 import { updateProfile } from "firebase/auth";
 import AvatarUploadBtn from "./AvatarUploadBtn";
 
-const Dashboard = ({onSignOut}) => {
+const Dashboard = ({onSignOut, name}) => {
 
-  const profile = useProfile();
+  const {profile} = useProfile();
 
   console.log('Dashboard Profile:', profile);
-
 
   const onSave = async (newName) => {
     const userNicknameRef = ref(getDatabase());
@@ -37,9 +36,10 @@ const Dashboard = ({onSignOut}) => {
       </Drawer.Header>
 
       <Drawer.Body>
-        {profile ? (
+        {( profile) ? (
           <>
-            <h3>Hey, {profile.name}</h3>
+          <h3>Hey, {profile.name}</h3>
+          
             <Divider />
             <EditableInput
           name="nickname"

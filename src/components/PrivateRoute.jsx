@@ -1,17 +1,24 @@
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate, Outlet} from 'react-router-dom';
 import { useProfile } from '../context/profile.context';
+import { Container, Loader } from 'rsuite';
 
-const PrivateRoute = ({ children, ...rest }) => {
+const PrivateRoute = () => {
 
-    let profile = true;
+    const {profile, isLoading} = useProfile();
+    console.log('from private Route', profile)
 
-  if (profile) {
-    // User is authenticated, allow access to the route
-    return <Route {...rest}>{children}</Route>;
-  } else {
-    // User is not authenticated, redirect to the sign-in page
-    return <Navigate to="/signin" />;
+  if (isLoading && !profile) {
+    return <Container>
+      <Loader center vertical size='md' content='Loading...' speed='slow' />
+    </Container>
+  } 
+  if (!isLoading && !profile){
+    return (<Navigate to="/signin" />)
   }
+
+  return (
+    profile? <Outlet/> : <Navigate to="/signin" />
+  );
 };
 
 export default PrivateRoute;

@@ -2,11 +2,9 @@ import { Icon } from "@rsuite/icons"
 import { Button, Col, Container, Grid, Panel, Row } from "rsuite"
 import {auth, database} from '../misc/firebase'
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { ref, child, get, set } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 import { toast } from "react-toastify";
 import FacebookOfficialIcon from '@rsuite/icons/legacy/FacebookOfficial';
-
-
 
 const Signin = () => {
 const googleProvider = new GoogleAuthProvider();
@@ -15,28 +13,24 @@ async function onGoogleSignIn() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
-
     // Check if user is new
     const userId = user.uid;
     const userRef = ref(database, `users/${userId}`);
     const userSnapshot = await get(userRef);
-
     if (!userSnapshot.exists()) {
       // Store user information in Realtime Database
       const userData = {
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
-        // Add any other fields you want to store
       };
-
       await set(userRef, userData);
-      toast("User data added for new user:", userId);
+      toast.success("User data added for new user:", userId);
     } else {
-      toast("User already exists: " + userId);
+      toast.success("User already exists: " + userId);
     }
   } catch (error) {
-    toast("Error: ", error);
+    toast.error("Error: ", error);
   }
 }
    
@@ -53,11 +47,11 @@ async function onGoogleSignIn() {
             </div>
 
             <div className="mt-3">
-              <Button block color="blue" >
+              <Button block color="blue" appearance="primary" >
               {<FacebookOfficialIcon />} Continue with Facebook
               </Button>
 
-              <Button block color="green" onClick={onGoogleSignIn} >
+              <Button block color="green" appearance="primary" onClick={onGoogleSignIn} >
                 <Icon icon="google" /> Continue with Google
               </Button>
             </div>

@@ -35,6 +35,7 @@ const AvatarUploadBtn = () => {
     const { isOpen, open, close } = useModalState();
 
     const { profile } = useProfile();
+    console.log('avatar', profile)
     const [img, setImg] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const avatarEditorRef = useRef();
@@ -93,8 +94,7 @@ const AvatarUploadBtn = () => {
     return (
         <div className="mt-3 text-center">
             <ProfileAvatar
-
-                src={profile && profile.avatar}
+                src={profile.avatar}
                 name={(profile && profile.name) ? profile.name.toUpperCase() : "Kumar"}
                 className="width-200 height-200 img-fullsize font-huge"
 
